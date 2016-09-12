@@ -1,6 +1,8 @@
 // var ipc = require('ipc')
 var clipboard = require('electron').clipboard
 var nativeImage = require('electron').nativeImage
+var win = require('electron').remote.getCurrentWindow()
+
 var _ = require('lodash')
 
 // 应对 微信网页偷换了console 使起失效
@@ -14,15 +16,12 @@ function debug(/*args*/){
 
 // 禁止外层网页滚动 影响使用
 document.addEventListener('DOMContentLoaded', () => {
-	// document.body.style.height = '100%'
 	document.body.style.overflow = 'hidden'
 })
 
 
 var free = true
-// setTimeout(function(){
-	init()
-// }, 3000)
+init()
 
 function init(){
 	var checkForQrcode = setInterval(function(){
@@ -44,6 +43,10 @@ function init(){
 function onLogin(){
 	// ipc.sendToHost('login')
 	$('img[src*=filehelper]').closest('.chat_item')[0].click()
+
+	// win.setFullScreen(true)
+	// win.maximize()
+
 	var checkForReddot = setInterval(function(){
 		// window.isFocus = true
 		var $reddot = $('.web_wechat_reddot, .web_wechat_reddot_middle').last()
@@ -243,7 +246,6 @@ function onReddot($chat_item){
 	}, 100)
 }
 
-
 function reset(){
 	// 适当清理历史 缓解dom数量
 	var msgs = $('#chatArea').scope().chatContent
@@ -274,4 +276,3 @@ function paste(opt){
 	clipboard.writeHtml(oldHtml)
 	clipboard.writeText(oldText)
 }
-

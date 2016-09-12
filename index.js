@@ -22,6 +22,9 @@ app.on('ready', function(){
 	var win = new BrowserWindow({
 		width: 900,
 		height: 610,
+		frame: false,
+		transparent: true,
+		fullscreen: true,
 		webPreferences: {
 			nodeIntegration: false,
 			preload: __dirname + '/preload.js'
