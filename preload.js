@@ -3,9 +3,17 @@ var clipboard = require('electron').clipboard
 var nativeImage = require('electron').nativeImage
 var win = require('electron').remote.getCurrentWindow()
 const {width, height} = require('electron').screen.getPrimaryDisplay().workAreaSize
-const ROOM = '9.24日婚礼-安亭别墅'
-
 var _ = require('lodash')
+
+const ROOM = '9.24日婚礼-安亭别墅'
+const CUSTOM_CSS = `
+    .danmu { 
+        width: 100%; 
+        height: 100%; 
+    }
+`
+const DANMU = "<div class='danmu'></div>"
+
 
 // 应对 微信网页偷换了console 使起失效
 // 保住console引用 便于使用
@@ -22,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     win.setSize(width - 1, height - 1)
     // Mute Audio
     win.webContents.setAudioMuted(true)
+    win.webContents.insertCSS(CUSTOM_CSS)
     // Disable Native Notification
     window.Notification = null
 })
@@ -50,6 +59,7 @@ function onLogin(){
 	$('img[src*=filehelper]').closest('.chat_item')[0].click()
     $('body').css('background','transparent')
     $('.loaded .main').css('display','none')
+    $('body').append(danmu)
 
 	var checkForReddot = setInterval(function(){
 		// window.isFocus = true
