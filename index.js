@@ -1,6 +1,5 @@
 var BrowserWindow = require('electron').BrowserWindow
 var app = require('electron').app
-// var ipc = require('ipc')
 var _ = require('lodash')
 var fs = require('fs-extra')
 var bytes = require('bytes')
@@ -10,18 +9,13 @@ function debug(/*args*/){
 	console.log(args)
 }
 
-
 var downloadDir = `${__dirname}/download`
+
 fs.mkdirpSync(downloadDir)
 
 app.on('ready', function(){
 
-	// var win = new BrowserWindow({})
-	// win.loadURL('file://' + __dirname + '/index.html')
-
 	var win = new BrowserWindow({
-		width: 900,
-		height: 610,
 		frame: false,
 		transparent: true,
 		fullscreen: true,
@@ -30,9 +24,9 @@ app.on('ready', function(){
 			preload: __dirname + '/preload.js'
 		}
 	})
+
 	win.loadURL('https://wx.qq.com/?lang=zh_CN&t=' + Date.now())
 
-	// electron api DownloadItem
 	// https://github.com/atom/electron/blob/master/docs/api/download-item.md
 	win.webContents.session.on('will-download', function(e, item){
 		//e.preventDefault()
