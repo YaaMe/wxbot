@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"> 
+    <title>弾幕テスト</title>
+</head>
+<style type="text/css">
+body,html {
+    height: 100%;
+    padding: 0px;
+    margin: 0px;
+}
+.danmu { 
+    width: 100%; 
+    height: 100%; 
+    display: block;
+    position: fixed;
+    top:0px;
+}
+.qrmask {
+    text-align: center;
+    width: 100%; 
+    height: 100%; 
+    display: block;
+    background-color: black;
+}
+.wave {
+    display: inline-block;
+    margin: 11px;
+    width: 5vw;
+    top: 20px;
+    height: 5vw;
+    left: 20px;
+    border-radius: 100%;
+}
+.light {
+    box-shadow: 0px 0px 30px #67e606;
+}
+</style>
+<body>
+    <div class="qrmask"> 
+        <!-- <div class="wave light"></div>   -->
+    </div>
+    <div class="danmu"> </div>
+</body>
+<script type="text/javascript">
+
+function addAmo(amu) {
+    var _div = danmu.createElement('div');
+    _div.innerHTML = amu;
+}
+</script>
+</html>
