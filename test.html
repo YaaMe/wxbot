@@ -76,6 +76,7 @@ function addAmo(amu) {
     _div.innerHTML = amu;
     _div.classList.add('word');
     danmu.appendChild(_div);
+    setTimeout(function(){ _div.remove() }, 10000)
 }
 </script>
 </html>
