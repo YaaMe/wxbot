@@ -5,6 +5,18 @@
     <title>弾幕テスト</title>
 </head>
 <style type="text/css">
+/*
+Animations
+*/
+/* For words in Danmu */
+@keyframes fly {
+    0%     {transform: translateX(100vw);}
+    100%   {transform: translateX(-100vw);}
+}
+
+/*
+End of Animations
+*/
 body,html {
     height: 100%;
     padding: 0px;
@@ -36,6 +48,19 @@ body,html {
 .light {
     box-shadow: 0px 0px 30px #67e606;
 }
+.danmu .word {
+    color: white;    
+    transform: translateX(100vw);
+    animation-name: fly;
+    animation-duration: 10s;
+    animation-timing-function: linear;
+    animation-iteration-count: 1;
+    animation-direction: alternate;
+    animation-play-state: running;
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+    height: 1.5rem;
+}
 </style>
 <body>
     <div class="qrmask"> 
@@ -44,10 +69,13 @@ body,html {
     <div class="danmu"> </div>
 </body>
 <script type="text/javascript">
-
+// Function to add Danmu
 function addAmo(amu) {
-    var _div = danmu.createElement('div');
+    let danmu = document.querySelector('.danmu');
+    let _div = document.createElement('div');
     _div.innerHTML = amu;
+    _div.classList.add('word');
+    danmu.appendChild(_div);
 }
 </script>
 </html>
