@@ -21,7 +21,8 @@ const CUSTOM_CSS = `
         height: 100vh; 
     }
     .danmu .word {
-        color: white;    
+        color: white; 
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
         transform: translateX(100vw);
         animation-name: fly;
         animation-duration: 10s;
@@ -32,6 +33,37 @@ const CUSTOM_CSS = `
         font-size: 1.5rem;
         line-height: 1.5rem;
         height: 1.5rem;
+    }
+    .danmu .manager {
+        color: yellow;
+        text-shadow: -1px 0 red, 0 1px red, 1px 0 red, 0 -1px red;
+        transform: translateX(100vw);
+        animation-name: fly;
+        animation-duration: 20s;
+        animation-timing-function: linear;
+        animation-iteration-count: 1;
+        animation-direction: alternate;
+        animation-play-state: running;
+        font-size: 2rem;
+        line-height: 2rem;
+        height: 2rem;
+ 
+    }
+    .danmu .admin {
+        color: red;
+        font-family: SimHei;
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+        transform: translateX(100vw);
+        animation-name: fly;
+        animation-duration: 20s;
+        animation-timing-function: linear;
+        animation-iteration-count: 1;
+        animation-direction: alternate;
+        animation-play-state: running;
+        font-size: 3rem;
+        line-height: 3rem;
+        height: 3rem;
+ 
     }
 `
 const DANMU = "<div class='danmu'></div>"
@@ -60,18 +92,23 @@ document.addEventListener('DOMContentLoaded', () => {
 var free = true
 init()
 
-function addAmo(amu) {
+function addAmo(amu, group=0) {
     let danmu = document.querySelector('.danmu');
     let _div = document.createElement('div');
     _div.innerHTML = amu;
-    _div.classList.add('word');
+    switch(group) {
+        case 0: _div.classList.add('word');break;
+        case 1: _div.classList.add('manager');break;
+        case 2: _div.classList.add('admin');break;
+        default: _div.classList.add('word');break;
+    }
     danmu.appendChild(_div);
     setTimeout(function(){ _div.remove() }, 10000)
 }
 
 function init(){
 	var checkForQrcode = setInterval(function(){
-		var qrimg = document.querySelector('.qrcode img')
+		 var qrimg = document.querySelector('.qrcode img')
 		if (qrimg && qrimg.src.match(/\/qrcode/)) {
 			debug('二维码', qrimg.src)
 			clearInterval(checkForQrcode)
@@ -275,7 +312,19 @@ function onReddot($chat_item){
 		if (normal && !text.match(/叼|屌|diao|丢你|碉堡/i)) {
 	        debug('来自', from, room) // 这里的nickname会被remark覆盖
 		    debug('接收', 'text', text)
-	        addAmo(text)
+            if(text.match(/0/)) {
+                addAmo(text, 0)
+            } else {
+                if (text.match(/1/)) {
+                    addAmo(text, 1)
+                } else {
+                    if (text.match(/2/)) {
+                        addAmo(text, 2)
+                    } else {
+                        addAmo(text,0)
+                    }
+                }
+            }
         }
 		// reply.text = text
 	}
