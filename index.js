@@ -18,6 +18,7 @@ app.on('ready', function(){
 	var win = new BrowserWindow({
 		frame: false,
 		transparent: true,
+        'always-on-top': false,
 		fullscreen: true,
 		webPreferences: {
 			nodeIntegration: false,
