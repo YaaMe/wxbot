@@ -5,12 +5,33 @@ var win = require('electron').remote.getCurrentWindow()
 const {width, height} = require('electron').screen.getPrimaryDisplay().workAreaSize
 var _ = require('lodash')
 
-const ROOM = '9.24日婚礼-安亭别墅'
+const ROOM = '欢迎莅临姚远和霍丽婕的婚礼';
 const CUSTOM_CSS = `
+    @keyframes fly {
+        0%     {transform: translateX(100vw);}
+        100%   {transform: translateX(-100vw);}
+    }
     .danmu { 
-    	background-color: black;
-        width: 100%; 
-        height: 100%; 
+        position: fixed;
+        z-index: 9999;
+        top:0;
+        left:0;
+    	background-color: transparent;
+        width: 100vw; 
+        height: 100vh; 
+    }
+    .danmu .word {
+        color: white;    
+        transform: translateX(100vw);
+        animation-name: fly;
+        animation-duration: 10s;
+        animation-timing-function: linear;
+        animation-iteration-count: 1;
+        animation-direction: alternate;
+        animation-play-state: running;
+        font-size: 1.5rem;
+        line-height: 1.5rem;
+        height: 1.5rem;
     }
 `
 const DANMU = "<div class='danmu'></div>"
@@ -89,13 +110,9 @@ var observeDOM = (function(){
 
 function onLogin(){
 
-	// observeDOM( document.getElementsByClassName('.loaded .main') ,function(){ 
-	// 	debug('dom changed');
-	// });
-
 	$('img[src*=filehelper]').closest('.chat_item')[0].click()
     $('body').css('background','transparent')
-    // $('.loaded .main').css('display','none')
+    $('.loaded .main').css('opacity', 0)
     $('body').append(DANMU)
 
 	var checkForReddot = setInterval(function(){
@@ -139,88 +156,89 @@ function onReddot($chat_item){
 		var from = $titlename.text()
 		var room = null
 	}
-	debug('来自', from, room) // 这里的nickname会被remark覆盖
+//	debug('来自', from, room) // 这里的nickname会被remark覆盖
 
 	// 系统消息暂时无法捕获
 	// 因为不产生红点 而目前我们依靠红点 可以改善
-	if ($msg.is('.message_system')) {
-		var ctn = $msg.find('.content').text()
-		if (ctn === '收到红包，请在手机上查看') {
-			text = '发毛红包'
-		} else if (ctn === '位置共享已经结束') {
-			text = '位置共享已经结束'
-		} else if (ctn === '实时对讲已经结束') {
-			text = '实时对讲已经结束'
-		} else if (ctn.match(/(.+)邀请(.+)加入了群聊/)) {
-			text = '加毛人'
-		} else if (ctn.match(/(.+)撤回了一条消息/)) {
-			text = '撤你妹'
-		} else {
-			// 无视
-		}
-	} else
-
-	if ($msg.is('.emoticon')) { // 自定义表情
-		var src = $msg.find('.msg-img').prop('src')
-		debug('接收', 'emoticon', src)
-		reply.text = '发毛表情'
-	} else if ($msg.is('.picture')) {
-		var src = $msg.find('.msg-img').prop('src')
-		debug('接收', 'picture', src)
-		// reply.text = '发毛图片'
-		reply.image = './fuck.jpeg'
-	} else if ($msg.is('.location')) {
-		//var src = $msg.find('.img').prop('src')
-		var desc = $msg.find('.desc').text()
-		debug('接收', 'location', desc)
-		reply.text = desc
-	} else if ($msg.is('.attach')) {
-		var title = $msg.find('.title').text()
-		var size = $msg.find('span:first').text()
-		var $download = $msg.find('a[download]') // 可触发下载
-		debug('接收', 'attach', title, size)
-		reply.text = title + '\n' + size
-	} else if ($msg.is('.microvideo')) {
-		var poster = $msg.find('img').prop('src') // 限制
-		var src = $msg.find('video').prop('src') // 限制
-		debug('接收', 'microvideo', src)
-		reply.text = '发毛小视频'
-	} else if ($msg.is('.video')) {
-		var poster = $msg.find('.msg-img').prop('src') // 限制
-		debug('接收', 'video', src)
-		reply.text = '发毛视频'
-	} else if ($msg.is('.voice')) {
-		$msg[0].click()
-		var duration = parseInt($msg.find('.duration').text())
-		var src = $('#jp_audio_1').prop('src') // 认证限制
-		var msgid = src.match(/msgid=(\d+)/)[1]
-		var date = new Date().toJSON()
-			.replace(/\..+/, '')
-			.replace(/[\-:]/g, '')
-			.replace('T', '-')
-		// 20150927-164539_5656119287354277662.mp3
-		var filename = `${date}_${msgid}.mp3`
-		$('<a>').attr({
-			download: filename,
-			href: src
-		})[0].click() // 触发下载
-		debug('接收', 'voice', `${duration}s`, src)
-		reply.text = '发毛语音'
-	} else if ($msg.is('.card')) {
-		var name = $msg.find('.display_name').text()
-		var wxid = $msg.find('.signature').text()
-		var img = $msg.find('.img').prop('src') // 认证限制
-		debug('接收', 'card', name, wxid)
-		reply.text = name + '\n' + wxid
-	} else if ($msg.is('a.app')) {
-		var url = $msg.attr('href')
-		url = decodeURIComponent(url.match(/requrl=(.+?)&/)[1])
-		var title = $msg.find('.title').text()
-		var desc = $msg.find('.desc').text()
-		var img = $msg.find('.cover').prop('src') // 认证限制
-		debug('接收', 'link', title, desc, url)
-		reply.text = title + '\n' + url
-	} else if ($msg.is('.plain')) {
+//	if ($msg.is('.message_system')) {
+//		var ctn = $msg.find('.content').text()
+//		if (ctn === '收到红包，请在手机上查看') {
+//			text = '发毛红包'
+//		} else if (ctn === '位置共享已经结束') {
+//			text = '位置共享已经结束'
+//		} else if (ctn === '实时对讲已经结束') {
+//			text = '实时对讲已经结束'
+//		} else if (ctn.match(/(.+)邀请(.+)加入了群聊/)) {
+//			text = '加毛人'
+//		} else if (ctn.match(/(.+)撤回了一条消息/)) {
+//			text = '撤你妹'
+//		} else {
+//			// 无视
+//		}
+//	} else
+//
+//	if ($msg.is('.emoticon')) { // 自定义表情
+//		var src = $msg.find('.msg-img').prop('src')
+//		debug('接收', 'emoticon', src)
+//		reply.text = '发毛表情'
+//	} else if ($msg.is('.picture')) {
+//		var src = $msg.find('.msg-img').prop('src')
+//		debug('接收', 'picture', src)
+//		// reply.text = '发毛图片'
+//		reply.image = './fuck.jpeg'
+//	} else if ($msg.is('.location')) {
+//		//var src = $msg.find('.img').prop('src')
+//		var desc = $msg.find('.desc').text()
+//		debug('接收', 'location', desc)
+//		reply.text = desc
+//	} else if ($msg.is('.attach')) {
+//		var title = $msg.find('.title').text()
+//		var size = $msg.find('span:first').text()
+//		var $download = $msg.find('a[download]') // 可触发下载
+//		debug('接收', 'attach', title, size)
+//		reply.text = title + '\n' + size
+//	} else if ($msg.is('.microvideo')) {
+//		var poster = $msg.find('img').prop('src') // 限制
+//		var src = $msg.find('video').prop('src') // 限制
+//		debug('接收', 'microvideo', src)
+//		reply.text = '发毛小视频'
+//	} else if ($msg.is('.video')) {
+//		var poster = $msg.find('.msg-img').prop('src') // 限制
+//		debug('接收', 'video', src)
+//		reply.text = '发毛视频'
+//	} else if ($msg.is('.voice')) {
+//		$msg[0].click()
+//		var duration = parseInt($msg.find('.duration').text())
+//		var src = $('#jp_audio_1').prop('src') // 认证限制
+//		var msgid = src.match(/msgid=(\d+)/)[1]
+//		var date = new Date().toJSON()
+//			.replace(/\..+/, '')
+//			.replace(/[\-:]/g, '')
+//			.replace('T', '-')
+//		// 20150927-164539_5656119287354277662.mp3
+//		var filename = `${date}_${msgid}.mp3`
+//		$('<a>').attr({
+//			download: filename,
+//			href: src
+//		})[0].click() // 触发下载
+//		debug('接收', 'voice', `${duration}s`, src)
+//		reply.text = '发毛语音'
+//	} else if ($msg.is('.card')) {
+//		var name = $msg.find('.display_name').text()
+//		var wxid = $msg.find('.signature').text()
+//		var img = $msg.find('.img').prop('src') // 认证限制
+//		debug('接收', 'card', name, wxid)
+//		reply.text = name + '\n' + wxid
+//	} else if ($msg.is('a.app')) {
+//		var url = $msg.attr('href')
+//		url = decodeURIComponent(url.match(/requrl=(.+?)&/)[1])
+//		var title = $msg.find('.title').text()
+//		var desc = $msg.find('.desc').text()
+//		var img = $msg.find('.cover').prop('src') // 认证限制
+//		debug('接收', 'link', title, desc, url)
+//		reply.text = title + '\n' + url
+//	} else if ($msg.is('.plain')) {
+	if ($msg.is('.plain') && room === ROOM) {
 		var text = ''
 		var normal = false
 		var $text = $msg.find('.js_message_plain')
@@ -254,12 +272,14 @@ function onReddot($chat_item){
 		} else {
 			normal = true
 		}
-		debug('接收', 'text', text)
-		// if (normal && !text.match(/叼|屌|diao|丢你|碉堡/i)) text = ''
-		reply.text = text
+		if (normal && !text.match(/叼|屌|diao|丢你|碉堡/i)) {
+	        debug('来自', from, room) // 这里的nickname会被remark覆盖
+		    debug('接收', 'text', text)
+	        addAmo(text)
+        }
+		// reply.text = text
 	}
-	debug('回复', reply)
-	addAmo(reply)
+	//debug('回复', reply)
 
 	// 借用clipboard 实现输入文字 更新ng-model=EditAreaCtn
 	// ~~直接设#editArea的innerText无效 暂时找不到其他方法~~
