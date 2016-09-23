@@ -1,4 +1,5 @@
 var BrowserWindow = require('electron').BrowserWindow
+BrowserWindow.setIgnoreMouseEvents(true)
 var app = require('electron').app
 var _ = require('lodash')
 var fs = require('fs-extra')
