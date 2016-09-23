@@ -1,5 +1,4 @@
 var BrowserWindow = require('electron').BrowserWindow
-BrowserWindow.setIgnoreMouseEvents(true)
 var app = require('electron').app
 var _ = require('lodash')
 var fs = require('fs-extra')
@@ -25,7 +24,7 @@ app.on('ready', function(){
 			preload: __dirname + '/preload.js'
 		}
 	})
-
+    win.setIgnoreMouseEvents(true)
 	win.loadURL('https://wx.qq.com/?lang=zh_CN&t=' + Date.now())
 
 	// https://github.com/atom/electron/blob/master/docs/api/download-item.md
