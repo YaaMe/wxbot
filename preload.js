@@ -69,6 +69,9 @@ const CUSTOM_CSS = `
 `
 const DANMU = "<div class='danmu'></div>"
 
+setInterval(function(){
+    win.setAlwaysOnTop(true);
+}, 1000)
 
 // 应对 微信网页偷换了console 使起失效
 // 保住console引用 便于使用

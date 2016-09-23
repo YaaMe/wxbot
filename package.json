@@ -1,6 +1,7 @@
 {
+  "productName": "Danmu",
   "name": "wxbot",
-  "version": "0.0.8",
+  "version": "0.0.1",
   "description": "普通个人号 微信机器人/外挂",
   "repository": "git@github.com:fritx/wxbot.git",
   "homepage": "https://github.com/fritx/wxbot",
@@ -14,7 +15,6 @@
     "start": "electron ."
   },
   "dependencies": {
-    "velocity-animate": "*",
     "bytes": "^2.1.0",
     "fs-extra": "^0.24.0",
     "lodash": "^3.10.1"
